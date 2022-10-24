@@ -4,10 +4,10 @@ const promise = welcome();
 
 const question = "Will the weather be nice today?";
 
-promise
+const test = promise
   .then((response) => console.log(response + "\n\n" + question)) // Logs the result of welcome()
 
-  .then(tell(question).then(console.log).catch(console.error))
+  .then(tell(question).then(console.log).catch(console.error)) //Promise within promise chain needs to be nested
 
   .catch(console.error)
 
@@ -28,3 +28,7 @@ promise
 //     console.log(fortune);
 //   })
 //   .catch(console.error);
+
+test.then(() => {
+  console.log("test");
+});
