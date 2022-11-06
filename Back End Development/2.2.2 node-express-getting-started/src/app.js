@@ -5,15 +5,30 @@ const app = express();
 
 app.use(morgan("dev"));
 
-app.get("/states/:abbreviation", (req, res, next) => {
+const checkForAbbreviationLength = (req, res, next) => {
   const abbreviation = req.params.abbreviation;
-
-  if (abbreviation.length != 2) {
-    next("State abbreviation is invalid");
+  if (abbreviation.length !== 2) {
+    next(`State abbreviation "${abbreviation}" is invalid`);
   } else {
-    res.send(`${abbreviation} is a nice state.`);
+    next();
   }
-});
+};
+
+app.get(
+  "/states/:abbreviation",
+  checkForAbbreviationLength, //The next in the router-level middleware calls the next callback listener
+  (req, res, next) => {
+    res.send(`${req.params.abbreviation} is a nice state.`);
+  }
+);
+
+app.get(
+  "/travel/:abbreviation",
+  checkForAbbreviationLength,
+  (req, res, next) => {
+    res.send(`Have fun at ${req.params.abbreviation}!`);
+  }
+);
 
 const sayHello = (req, res, next) => {
   console.log(req.query);
