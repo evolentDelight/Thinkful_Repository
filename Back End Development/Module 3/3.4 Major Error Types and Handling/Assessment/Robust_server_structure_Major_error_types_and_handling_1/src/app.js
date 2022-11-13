@@ -32,7 +32,7 @@ function bodyHasTextProperty(req, res, next) {
   if (text) {
     return next();
   } else {
-    res.sendStatus({ status: 404, message: "A 'text' property is required." });
+    next({ status: 400, message: "A 'text' property is required." });
   }
 }
 
