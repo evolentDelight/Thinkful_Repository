@@ -6,7 +6,11 @@ const notes = require("./data/notes-data");
 app.get("/notes/:noteId", (req, res) => {
   const noteId = Number(req.params.noteId);
   const foundNote = notes.find((note) => note.id === noteId);
-  res.json({ data: foundNote });
+  if (foundNote) {
+    res.json({ data: foundNote });
+  } else {
+    next(`Note id not found: ${noteId}`);
+  }
 });
 
 app.get("/notes", (req, res) => {
@@ -14,10 +18,32 @@ app.get("/notes", (req, res) => {
 });
 
 // TODO: Add ability to create a new note
-app.post("/notes", (req, res, next) => {});
+let lastNoteId = notes.reduce((maxId, notes) => Math.max(maxId, notes.id), 0);
+
+app.post("/notes", (req, res, next) => {
+  const { data: { id, text } = {} } = req.body;
+
+  if (text) {
+    const newNote = {
+      id: ++lastNoteId,
+      text,
+    };
+    notes.push(newNote);
+
+    res.status(201).json({ data: newNote });
+  } else {
+    res.status(400);
+  }
+});
 
 // TODO: Add not-found handler
+app.use((req, res, next) => {
+  next(`Not found: ${req.originalUrl}`);
+});
 
 // TODO: Add error handler
+app.use((err, req, res, next) => {
+  res.status(400).send(err);
+});
 
 module.exports = app;
