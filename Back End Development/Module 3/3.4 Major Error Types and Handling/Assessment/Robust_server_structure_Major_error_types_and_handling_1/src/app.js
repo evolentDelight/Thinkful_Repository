@@ -6,7 +6,7 @@ const notes = require(path.resolve("src/data/notes-data"));
 
 app.use(express.json());
 
-function bodyHasNoteProperty(req, res, next) {
+function noteExists(req, res, next) {
   const noteId = Number(req.params.noteId);
   const foundNote = notes.find((note) => note.id === noteId);
 
@@ -17,7 +17,9 @@ function bodyHasNoteProperty(req, res, next) {
   }
 }
 
-app.get("/notes/:noteId", bodyHasNoteProperty, (req, res) => {
+app.get("/notes/:noteId", noteExists, (req, res) => {
+  const noteId = Number(req.params.noteId);
+  const foundNote = notes.find((note) => note.id === noteId);
   res.json({ data: foundNote });
 });
 
@@ -25,20 +27,27 @@ app.get("/notes", (req, res) => {
   res.json({ data: notes });
 });
 
-let lastNoteId = notes.reduce((maxId, note) => Math.max(maxId, note.id), 0);
-
-app.post("/notes", (req, res) => {
+function bodyHasTextProperty(req, res, next) {
   const { data: { text } = {} } = req.body;
   if (text) {
-    const newNote = {
-      id: ++lastNoteId, // Increment last id then assign as the current ID
-      text,
-    };
-    notes.push(newNote);
-    res.status(201).json({ data: newNote });
+    return next();
   } else {
-    res.sendStatus(400);
+    res.sendStatus({ status: 404, message: "A 'text' property is required." });
   }
+}
+
+let lastNoteId = notes.reduce((maxId, note) => Math.max(maxId, note.id), 0);
+
+app.post("/notes", bodyHasTextProperty, (req, res) => {
+  const { data: { text } = {} } = req.body;
+
+  const newNote = {
+    id: ++lastNoteId, // Increment last id then assign as the current ID
+    text,
+  };
+
+  notes.push(newNote);
+  res.status(201).json({ data: newNote });
 });
 
 // Not found handler
