@@ -3,7 +3,7 @@ const app = express();
 
 const notes = require("./data/notes-data");
 
-app.get("/notes/:noteId", (req, res) => {
+app.get("/notes/:noteId", (req, res, next) => {
   const noteId = Number(req.params.noteId);
   const foundNote = notes.find((note) => note.id === noteId);
   if (foundNote) {
@@ -21,6 +21,16 @@ app.get("/notes", (req, res) => {
 let lastNoteId = notes.reduce((maxId, notes) => Math.max(maxId, notes.id), 0);
 
 app.post("/notes", (req, res, next) => {
+  if (req.body === undefined) {
+    console.log(
+      "🚀 ~ file: app.js ~ line 26 ~ app.post ~ req.body === undefined",
+      req.body === undefined
+    );
+    res.sendStatus(400);
+  } else {
+    console.log("req.body is defined: ", req.body !== undefined);
+  }
+
   const { data: { id, text } = {} } = req.body;
 
   if (text) {
@@ -32,7 +42,7 @@ app.post("/notes", (req, res, next) => {
 
     res.status(201).json({ data: newNote });
   } else {
-    res.status(400);
+    res.sendStatus(400);
   }
 });
 
@@ -43,6 +53,8 @@ app.use((req, res, next) => {
 
 // TODO: Add error handler
 app.use((err, req, res, next) => {
+  //console.log("🚀 ~ file: app.js ~ line 46 ~ app.use ~ err", err);
+
   res.status(400).send(err);
 });
 
