@@ -6,14 +6,19 @@ const notes = require(path.resolve("src/data/notes-data"));
 
 app.use(express.json());
 
-app.get("/notes/:noteId", (req, res) => {
+function bodyHasNoteProperty(req, res, next) {
   const noteId = Number(req.params.noteId);
   const foundNote = notes.find((note) => note.id === noteId);
+
   if (foundNote) {
-    res.json({ data: foundNote });
+    return next();
   } else {
-    return next(`Note id not found: ${req.params.noteId}`);
+    next({ status: 404, message: `Note id not found: ${req.params.noteId}` });
   }
+}
+
+app.get("/notes/:noteId", bodyHasNoteProperty, (req, res) => {
+  res.json({ data: foundNote });
 });
 
 app.get("/notes", (req, res) => {
@@ -44,7 +49,8 @@ app.use((req, res, next) => {
 // Error handler
 app.use((error, req, res, next) => {
   console.error(error);
-  res.status(500).send(error);
+  const { status = 500, message = "Something went wrong" } = error;
+  res.status(status).json({ error: message });
 });
 
 module.exports = app;
