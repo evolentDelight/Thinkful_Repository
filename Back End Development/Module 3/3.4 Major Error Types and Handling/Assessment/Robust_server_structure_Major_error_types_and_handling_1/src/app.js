@@ -43,7 +43,7 @@ app.post("/notes", (req, res) => {
 
 // Not found handler
 app.use((req, res, next) => {
-  next(`Not found: ${req.originalUrl}`);
+  next({ status: 404, message: `Not found: ${req.originalUrl}` });
 });
 
 // Error handler
