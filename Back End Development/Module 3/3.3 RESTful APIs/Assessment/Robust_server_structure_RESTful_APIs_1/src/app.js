@@ -24,13 +24,7 @@ let lastNoteId = notes.reduce((maxId, notes) => Math.max(maxId, notes.id), 0);
 
 app.post("/notes", (req, res, next) => {
   if (req.body === undefined) {
-    console.log(
-      "🚀 ~ file: app.js ~ line 26 ~ app.post ~ req.body === undefined",
-      req.body === undefined
-    );
     res.sendStatus(400);
-  } else {
-    console.log("req.body is defined: ", req.body !== undefined);
   }
 
   const { data: { id, text } = {} } = req.body;
@@ -55,8 +49,6 @@ app.use((req, res, next) => {
 
 // TODO: Add error handler
 app.use((err, req, res, next) => {
-  //console.log("🚀 ~ file: app.js ~ line 46 ~ app.use ~ err", err);
-
   res.status(400).send(err);
 });
 
