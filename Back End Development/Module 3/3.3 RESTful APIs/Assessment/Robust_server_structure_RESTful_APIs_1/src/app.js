@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+app.use(express.json());
+
 const notes = require("./data/notes-data");
 
 app.get("/notes/:noteId", (req, res, next) => {
