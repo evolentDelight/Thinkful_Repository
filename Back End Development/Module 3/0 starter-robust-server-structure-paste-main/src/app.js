@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+const pastesRouter = require("./pastes/pastes.router"); //Add pastees Router
+
 app.use(express.json()); //Middleware for JSON body of request
 
 // TODO: Follow instructions in the checkpoint to implement ths API.
@@ -18,10 +20,7 @@ app.use("/pastes/:pasteId", (req, res, next) => {
   }
 });
 
-app.get("/pastes", (req, res) => {
-  //GET Handler - only is called on incoming GET requests
-  res.json({ data: pastes });
-});
+app.use("/pastes", pastesRouter);
 
 // New middleware function to validate the request body
 
