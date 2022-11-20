@@ -1,10 +1,10 @@
 const router = require("express").Router();
-const controller = require("notes.controller.js");
+const controller = require("./notes.controller.js");
 
-router.route("/").get(controller.list).create(controller.create);
+router.route("/").get(controller.list).post(controller.create);
 
 router
-  .route("/:pasteId")
+  .route("/:noteId")
   .get(controller.read)
   .put(controller.update)
   .delete(controller.delete);

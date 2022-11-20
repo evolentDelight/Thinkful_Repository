@@ -46,15 +46,39 @@ function create(req, res, next) {
 }
 
 //Update Handler
-function update(req, res, next) {}
+function update(req, res, next) {
+  const { noteId } = req.params;
+
+  const foundnote = notes.find((note) => note.id === Number(noteId));
+
+  const { data: { name, syntax, expiration, exposure, text } = {} } = req.body;
+
+  // Update the note
+
+  foundnote.name = name;
+  foundnote.syntax = syntax;
+  foundnote.expiration = expiration;
+  foundnote.exposure = exposure;
+  foundnote.text = text;
+
+  res.json({ data: foundnote });
+}
 
 //Delete Handler
-function destroy(req, res, next) {}
+function destroy(req, res, next) {
+  const { noteId } = req.params;
+  const index = notes.findIndex((note) => note.id === Number(noteId));
+
+  // `splice()` returns an array of the deleted elements, even if it is one element
+  const deletedNotes = notes.splice(index, 1);
+
+  res.sendStatus(204);
+}
 
 module.exports = {
   list,
   read: [noteExists, read],
   create: [hasText, create],
-  update: [noteExists, update],
+  update: [noteExists, hasText, update],
   delete: [noteExists, destroy],
 };

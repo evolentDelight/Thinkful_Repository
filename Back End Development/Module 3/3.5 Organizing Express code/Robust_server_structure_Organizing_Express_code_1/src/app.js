@@ -4,7 +4,7 @@ const app = express();
 const path = require("path");
 const notes = require(path.resolve("src/data/notes-data"));
 
-const notesRouter = require("notes/notes.router.js");
+const notesRouter = require("./notes/notes.router.js");
 
 app.use("/notes", notesRouter);
 
