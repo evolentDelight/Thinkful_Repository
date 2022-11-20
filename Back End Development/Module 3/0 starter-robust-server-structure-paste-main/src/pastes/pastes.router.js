@@ -5,5 +5,6 @@ router.route("/").get(controller.list).post(controller.create);
 // ==
 // router.route("/").get(controller.list);
 // router.route("/").post(controller.create);
+router.route("/:pasteId").get(controller.read);
 
 module.exports = router;

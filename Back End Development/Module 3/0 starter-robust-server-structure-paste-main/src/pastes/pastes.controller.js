@@ -4,6 +4,7 @@ function list(req, res) {
   res.json({ data: pastes });
 }
 
+//Create-Paste Handler
 let lastPasteId = pastes.reduce((maxId, paste) => Math.max(maxId, paste.id), 0);
 
 function bodyDataHas(propertyName) {
@@ -87,6 +88,33 @@ function create(req, res) {
 
   res.status(201).json({ data: newPaste });
 }
+//End of Create-Paste Handler
+
+//Read-Paste Handler
+function pasteExists(req, res, next) {
+  const { pasteId } = req.params;
+
+  const foundPaste = pastes.find((paste) => paste.id === Number(pasteId));
+
+  if (foundPaste) {
+    return next();
+  }
+
+  next({
+    status: 404,
+
+    message: `Paste id not found: ${pasteId}`,
+  });
+}
+
+function read(req, res) {
+  const { pasteId } = req.params;
+
+  const foundPaste = pastes.find((paste) => paste.id === Number(pasteId));
+
+  res.json({ data: foundPaste });
+}
+//End of Read-Paste Handler
 
 module.exports = {
   create: [
@@ -101,6 +129,6 @@ module.exports = {
     expirationIsValidNumber,
     create,
   ],
-
   list,
+  read: [pasteExists, read],
 };
