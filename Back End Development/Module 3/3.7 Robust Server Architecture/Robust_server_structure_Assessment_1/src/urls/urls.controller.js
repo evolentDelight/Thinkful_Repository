@@ -1,4 +1,5 @@
 const urls = require("../data/urls-data");
+const uses = require("../data/uses-data");
 
 function hasURL(req, res, next) {
   if (req.body.data.href) {
@@ -23,13 +24,28 @@ function urlIdExists(req, res, next) {
 }
 
 let lastURLid = urls.reduce((maxId, url) => Math.max(maxId, url.id), 0);
+let lastUseid = uses.reduce((maxId, use) => Math.max(maxId, use.id), 0);
 
 function list(req, res, next) {
   res.json({ data: urls });
 }
 
 function read(req, res, next) {
-  //Side effect of use
+  //Side effect of read: Create use records of URL and time
+  const urlId = res.locals.url.id;
+
+  const foundUse = uses.find((use) => use.urlId === Number(urlId));
+
+  if (foundUse) {
+    foundUse.time = Date.now();
+  }
+
+  //Create new record of USE of the read URL
+
+  const newUseRecord = { id: ++lastUseid, urlId: urlId, time: Date.now() };
+
+  uses.push(newUseRecord);
+
   res.json({ data: res.locals.url });
 }
 
