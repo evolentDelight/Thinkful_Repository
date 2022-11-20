@@ -175,4 +175,5 @@ module.exports = {
     expirationIsValidNumber,
     update,
   ],
+  delete: [pasteExists, destroy],
 };
