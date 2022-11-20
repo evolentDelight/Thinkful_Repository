@@ -6,17 +6,13 @@ function list(req, res) {
 
 let lastPasteId = pastes.reduce((maxId, paste) => Math.max(maxId, paste.id), 0);
 
-function bodyHasTextProperty(req, res, next) {
-  const { data: { text } = {} } = req.body;
-
-  if (text) {
-    return next();
-  }
-
-  next({
-    status: 400,
-    message: "A 'text' property is required.",
-  });
+function bodyDataHas(propertyName) {
+  return function (req, res, next) {
+    const { data = {} } = req.body;
+    if (data[propertyName]) {
+      return next();
+    }
+  };
 }
 
 function create(req, res) {
@@ -39,7 +35,15 @@ function create(req, res) {
 }
 
 module.exports = {
-  create: [bodyHasTextProperty, create],
+  create: [
+    bodyDataHas("name"),
+    bodyDataHas("syntax"),
+    bodyDataHas("exposure"),
+    bodyDataHas("expiration"),
+    bodyDataHas("text"),
+    bodyDataHas("user_id"),
+    create,
+  ],
 
   list,
 };
