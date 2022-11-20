@@ -21,4 +21,4 @@ function read(req, res, next) {
   res.json({ data: res.locals.user });
 }
 
-module.exports = { list, read: [userExists, read] };
+module.exports = { list, read: [userExists, read], userExists };
