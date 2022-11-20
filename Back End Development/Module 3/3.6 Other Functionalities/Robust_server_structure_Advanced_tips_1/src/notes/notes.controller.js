@@ -68,4 +68,5 @@ module.exports = {
   read: [noteExists, read],
   update: [noteExists, hasText, update],
   delete: destroy,
+  noteExists,
 };

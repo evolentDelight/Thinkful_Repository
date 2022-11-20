@@ -1,11 +1,17 @@
 const ratings = require("../data/ratings-data");
 
 function list(req, res, next) {
-  res.json({ data: ratings });
+  const { noteId } = req.params;
+  res.json({
+    data: ratings.filter(
+      noteId ? (rating) => rating.noteId == noteId : () => true
+    ),
+  });
 }
 
 function ratingExists(req, res, next) {
   const { ratingId } = req.params;
+  console.log("ratingId: ", ratingId, "req.params: ", req.params);
   const foundRating = ratings.find((rating) => rating.id === Number(ratingId));
   if (foundRating) {
     res.locals.rating = foundRating;
