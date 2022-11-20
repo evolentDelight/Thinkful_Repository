@@ -4,7 +4,7 @@ const methodNotAllowed = require("../errors/methodNotAllowed.js");
 
 const pastesRouter = require("../pastes/pastes.router");
 
-router.use("/:userId/pastes", pastesRouter);
+router.use("/:userId/pastes", controller.userExists, pastesRouter);
 
 router.route("/:userId").get(controller.read).all(methodNotAllowed);
 
