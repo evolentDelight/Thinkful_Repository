@@ -9,6 +9,10 @@ router
   .post(controller.create)
   .all(methodNotAllowed);
 
-router.route("/:urlId").all(methodNotAllowed);
+router
+  .route("/:urlId")
+  .get(controller.read)
+  .put(controller.update)
+  .all(methodNotAllowed);
 
 module.exports = router;
