@@ -4,30 +4,11 @@ const app = express();
 const path = require("path");
 const notes = require(path.resolve("src/data/notes-data"));
 
+const notesRouter = require("notes/notes.router.js");
+
+app.use("/notes", notesRouter);
+
 app.use(express.json());
-
-const noteExists = (req, res, next) => {
-  const noteId = Number(req.params.noteId);
-  const foundNote = notes.find((note) => note.id === noteId);
-  if (foundNote) {
-    return next();
-  } else {
-    return next({
-      status: 404,
-      message: `Note id not found: ${req.params.noteId}`,
-    });
-  }
-};
-
-app.get("/notes/:noteId", noteExists, (req, res, next) => {
-  const noteId = Number(req.params.noteId);
-  const foundNote = notes.find((note) => note.id === noteId);
-  res.json({ data: foundNote });
-});
-
-app.get("/notes", (req, res) => {
-  res.json({ data: notes });
-});
 
 const hasText = (req, res, next) => {
   const { data: { text } = {} } = req.body;
