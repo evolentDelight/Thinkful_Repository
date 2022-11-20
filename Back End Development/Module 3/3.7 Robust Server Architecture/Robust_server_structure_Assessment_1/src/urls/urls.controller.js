@@ -55,4 +55,5 @@ module.exports = {
   read: [urlIdExists, read],
   create: [hasURL, create],
   update: [urlIdExists, update],
+  urlIdExists,
 };
