@@ -1,4 +1,4 @@
-const users = require("../data/users.data");
+const users = require("../data/users-data");
 
 function list(req, res) {
   res.json({ data: users });
