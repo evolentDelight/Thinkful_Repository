@@ -136,6 +136,18 @@ function update(req, res) {
 }
 //End of Update-Paste Handler
 
+//Delete-Paste Handler
+function destroy(req, res) {
+  const { pasteId } = req.params;
+  const index = pastes.findIndex((paste) => paste.id === Number(pasteId));
+
+  // `splice()` returns an array of the deleted elements, even if it is one element
+  const deletedPastes = pastes.splice(index, 1);
+
+  res.sendStatus(204);
+}
+//End of Delete-Paste Handler
+
 module.exports = {
   create: [
     bodyDataHas("name"),
