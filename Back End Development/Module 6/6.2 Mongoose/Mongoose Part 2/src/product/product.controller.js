@@ -21,6 +21,16 @@ function bodyDataHas(propertyName) {
 
 async function create(req, res) {
   //TODO: Write your code here
+  const { data: { name, cost } = {} } = req.body;
+
+  const newProduct = new Product({
+    name: name,
+    cost: cost,
+  });
+
+  await newProduct.save();
+
+  res.status(201).json({ data: newProduct });
 }
 
 module.exports = {
