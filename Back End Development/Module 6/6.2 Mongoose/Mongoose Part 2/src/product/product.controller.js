@@ -1,9 +1,9 @@
-const Product = require("./product.model")
+const Product = require("./product.model");
 
 async function list(req, res) {
   // TODO: Write your code here
-  
-  res.send("");
+  const products = await Product.find();
+  res.send(products);
 }
 
 function bodyDataHas(propertyName) {
@@ -13,23 +13,17 @@ function bodyDataHas(propertyName) {
       return next();
     }
     next({
-        status: 400,
-        message: `Must include a ${propertyName}`
+      status: 400,
+      message: `Must include a ${propertyName}`,
     });
   };
 }
 
 async function create(req, res) {
   //TODO: Write your code here
-
 }
-
 
 module.exports = {
   list,
-  create: [
-      bodyDataHas("name"),
-      bodyDataHas("cost"),
-      create
-  ],
+  create: [bodyDataHas("name"), bodyDataHas("cost"), create],
 };
