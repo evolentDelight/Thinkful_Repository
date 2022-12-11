@@ -76,8 +76,11 @@ async function update(req, res) {
 }
 
 async function destroy(req, res) {
-  // TODO: Task 6 DELETE /weather/:weatherStatusId - delete the weather status with a specific id
-  res.sendStatus(0);
+  const { weatherStatusId } = req.params;
+
+  await WeatherStatus.deleteOne({ _id: weatherStatusId });
+
+  res.sendStatus(204);
 }
 
 module.exports = {

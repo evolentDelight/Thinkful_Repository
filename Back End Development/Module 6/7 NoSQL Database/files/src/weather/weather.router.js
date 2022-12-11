@@ -5,8 +5,8 @@ const methodNotAllowed = require("../errors/methodNotAllowed");
 router
   .route("/:weatherStatusId")
   .get(controller.read)
-  .put(controller.update) // Uncomment after implementing Task 5
-  // .delete(controller.delete) // Uncomment after implementing Task 6
+  .put(controller.update)
+  .delete(controller.delete)
   .all(methodNotAllowed);
 
 router
