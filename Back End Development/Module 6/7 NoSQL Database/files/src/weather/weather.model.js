@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 
 const schema = mongoose.Schema({
-  // TODO: add day (Date), city (String), state(String), country (String), temperature (Number), and condition (String)
-  day: Date,
+  date: Date,
   city: String,
   state: String,
   country: String,
