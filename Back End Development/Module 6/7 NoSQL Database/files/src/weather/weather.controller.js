@@ -59,9 +59,20 @@ function read(req, res, next) {
 }
 
 async function update(req, res) {
-  // TODO: Task 5 PUT /weather/:weatherStatusId - update the weather status with a specific id
+  const { data: { date, city, state, country, temperature, condition } = {} } =
+    req.body;
+  const weatherStatus = res.locals.weatherStatus;
 
-  res.json({ data: "" });
+  weatherStatus.date = date;
+  weatherStatus.city = city;
+  weatherStatus.state = state;
+  weatherStatus.country = country;
+  weatherStatus.temperature = temperature;
+  weatherStatus.condition = condition;
+
+  await weatherStatus.save();
+
+  res.json({ data: weatherStatus });
 }
 
 async function destroy(req, res) {
