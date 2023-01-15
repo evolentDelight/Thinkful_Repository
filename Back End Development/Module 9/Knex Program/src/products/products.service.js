@@ -1,7 +1,7 @@
 const knex = require("../db/connection");
 
 function list() {
-  return knexInstance("products").select("*");
+  return knex("products").select("*");
 }
 
 module.exports = {
