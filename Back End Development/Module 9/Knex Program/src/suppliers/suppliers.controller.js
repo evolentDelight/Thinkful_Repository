@@ -32,6 +32,15 @@ function hasOnlyValidProperties(req, res, next) {
   next();
 }
 
+function supplierExists(req, res, next) {
+  suppliersService.read(req.params.supplierId).then((supplier) => {
+    if (supplier) {
+      res.locals.supplier = supplier;
+      return next();
+    }
+  });
+}
+
 async function create(req, res, next) {
   suppliersService
     .create(req.body.data)
@@ -40,7 +49,14 @@ async function create(req, res, next) {
 }
 
 async function update(req, res, next) {
-  res.json({ data: { supplier_name: "updated supplier" } });
+  const updatedSupplier = {
+    ...req.body.data,
+    supplier_id: res.locals.supplier.supplier_id,
+  };
+  suppliersService
+    .update(updatedSupplier)
+    .then((data) => res.json({ data }))
+    .catch(next);
 }
 
 async function destroy(req, res, next) {
@@ -49,6 +65,11 @@ async function destroy(req, res, next) {
 
 module.exports = {
   create: [hasOnlyValidProperties, hasRequiredProperties, create],
-  update,
+  update: [
+    supplierExists,
+    hasOnlyValidProperties,
+    hasRequiredProperties,
+    update,
+  ],
   delete: destroy,
 };
