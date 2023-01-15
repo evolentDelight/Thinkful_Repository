@@ -1,5 +1,8 @@
 const suppliersService = require("./suppliers.service.js");
 
+const hasProperties = require("../errors/hasProperties");
+const hasRequiredProperties = hasProperties("supplier_name", "supplier_email");
+
 //Validation Middleware
 const VALID_PROPERTIES = [
   "supplier_name",
@@ -17,10 +20,9 @@ const VALID_PROPERTIES = [
 function hasOnlyValidProperties(req, res, next) {
   const { data = {} } = req.body;
 
-  const invalidFields = Object.keys(
-    data.filter((field) => !VALID_PROPERTIES.includes(field))
+  const invalidFields = Object.keys(data).filter(
+    (field) => !VALID_PROPERTIES.includes(field)
   );
-
   if (invalidFields.length) {
     return next({
       status: 400,
@@ -31,7 +33,10 @@ function hasOnlyValidProperties(req, res, next) {
 }
 
 async function create(req, res, next) {
-  res.status(201).json({ data: { supplier_name: "new supplier" } });
+  suppliersService
+    .create(req.body.data)
+    .then((data) => res.status(201).json({ data }))
+    .catch(next);
 }
 
 async function update(req, res, next) {
@@ -43,7 +48,7 @@ async function destroy(req, res, next) {
 }
 
 module.exports = {
-  create,
+  create: [hasOnlyValidProperties, hasRequiredProperties, create],
   update,
   delete: destroy,
 };
