@@ -60,7 +60,10 @@ async function update(req, res, next) {
 }
 
 async function destroy(req, res, next) {
-  res.sendStatus(204);
+  suppliersService
+    .delete(res.locals.supplier.supplier_id)
+    .then(() => res.sendStatus(204))
+    .catch(next);
 }
 
 module.exports = {
