@@ -74,5 +74,5 @@ module.exports = {
     hasRequiredProperties,
     update,
   ],
-  delete: destroy,
+  delete: [supplierExists, destroy],
 };
