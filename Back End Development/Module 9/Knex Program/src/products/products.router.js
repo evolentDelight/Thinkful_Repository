@@ -8,5 +8,9 @@ router
   .route("/out-of-stock-count")
   .get(controller.listOutOfStockCount)
   .all(methodNotAllowed);
+router
+  .route("/price-summary")
+  .get(controller.listPriceSummary)
+  .all(methodNotAllowed);
 
 module.exports = router;
