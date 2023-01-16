@@ -8,6 +8,24 @@ const hasRequiredProperties = hasProperties(
   "address"
 );
 
+const VALID_PROPERTIES = ["restaurant_name", "cuisine", "address"];
+
+function hasOnlyValidProperties(req, res, next) {
+  const { data = {} } = req.body;
+
+  const invalidFields = Object.keys(data).filter(
+    (field) => !VALID_PROPERTIES.includes(field)
+  );
+
+  if (invalidFields.length) {
+    return next({
+      status: 400,
+      message: `Invalid field(s): ${invalidFields.join(",")}`,
+    });
+  }
+  next();
+}
+
 async function restaurantExists(req, res, next) {
   const { restaurantId } = req.params;
 
@@ -27,8 +45,8 @@ async function list(req, res, next) {
 
 async function create(req, res, next) {
   restaurantsService
-    .create(req.data.body)
-    .then((data) => res.Status(201).json({ data }))
+    .create(req.body.data)
+    .then((data) => res.status(201).json({ data }))
     .catch(next);
 }
 
@@ -53,7 +71,11 @@ async function destroy(req, res, next) {
 
 module.exports = {
   list: asyncErrorBoundary(list),
-  create: [hasRequiredProperties, asyncErrorBoundary(create)],
+  create: [
+    hasOnlyValidProperties,
+    hasRequiredProperties,
+    asyncErrorBoundary(create),
+  ],
   update: [asyncErrorBoundary(restaurantExists), asyncErrorBoundary(update)],
   delete: [asyncErrorBoundary(restaurantExists), asyncErrorBoundary(destroy)],
 };
