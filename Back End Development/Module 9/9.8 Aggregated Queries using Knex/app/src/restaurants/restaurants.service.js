@@ -1,7 +1,7 @@
 const knex = require("../db/connection");
 
 function averageRating() {
-  // your solution here
+  return knex("restaurants").avg("rating");
 }
 
 function count() {

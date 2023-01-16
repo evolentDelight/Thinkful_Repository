@@ -3,8 +3,9 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const restaurantsService = require("./restaurants.service.js");
 
 async function averageRating(req, res, next) {
-  // your solution here
-  res.json({ data: {} });
+  const response = await restaurantsService.averageRating();
+
+  res.json({ data: { average_rating: Number(response[0].avg) } });
 }
 
 async function list(req, res) {
