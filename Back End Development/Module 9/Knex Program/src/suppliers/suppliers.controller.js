@@ -32,20 +32,19 @@ function hasOnlyValidProperties(req, res, next) {
   next();
 }
 
-function supplierExists(req, res, next) {
-  suppliersService.read(req.params.supplierId).then((supplier) => {
-    if (supplier) {
-      res.locals.supplier = supplier;
-      return next();
-    }
-  });
+async function supplierExists(req, res, next) {
+  const supplier = suppliersService.read(req.params.supplierId);
+
+  if (supplier) {
+    res.locals.supplier = supplier;
+    return next();
+  }
+  next({ status: 404, message: `Supplier cannot be found.` });
 }
 
 async function create(req, res, next) {
-  suppliersService
-    .create(req.body.data)
-    .then((data) => res.status(201).json({ data }))
-    .catch(next);
+  const data = suppliersService.create(req.body.data);
+  res.status(201).json({ data });
 }
 
 async function update(req, res, next) {
@@ -53,17 +52,18 @@ async function update(req, res, next) {
     ...req.body.data,
     supplier_id: res.locals.supplier.supplier_id,
   };
-  suppliersService
-    .update(updatedSupplier)
-    .then((data) => res.json({ data }))
-    .catch(next);
+
+  const data = suppliersService.update(updatedSupplier);
+
+  res.json({ data });
 }
 
 async function destroy(req, res, next) {
-  suppliersService
-    .delete(res.locals.supplier.supplier_id)
-    .then(() => res.sendStatus(204))
-    .catch(next);
+  const { supplier } = res.locals;
+
+  await suppliersService.delete(supplier.supplier_id);
+
+  res.sendStatus(204);
 }
 
 module.exports = {
