@@ -1,5 +1,6 @@
 const service = require("./restaurants.service.js");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
+const restaurantsService = require("./restaurants.service.js");
 
 async function averageRating(req, res, next) {
   // your solution here
@@ -11,17 +12,14 @@ async function list(req, res) {
 }
 
 async function count(req, res, next) {
-  // your solution here
-  res.json({ data: {} });
+  const countedRestaurants = await restaurantsService.count();
+
+  res.json({ data: { count: parseInt(countedRestaurants[0].count, 10) } });
 }
 
 async function create(req, res, next) {
-  const newRestaurant = ({
-    restaurant_name,
-    address,
-    cuisine,
-    rating,
-  } = req.body.data);
+  const newRestaurant = ({ restaurant_name, address, cuisine, rating } =
+    req.body.data);
   const createdRestaurant = await service.create(newRestaurant);
   res.status(201).json({ data: createdRestaurant });
 }

@@ -5,7 +5,7 @@ function averageRating() {
 }
 
 function count() {
-  // your solution here
+  return knex("restaurants").count("restaurant_name");
 }
 
 function create(newRestaurant) {
