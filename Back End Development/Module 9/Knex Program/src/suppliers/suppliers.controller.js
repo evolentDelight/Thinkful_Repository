@@ -33,7 +33,7 @@ function hasOnlyValidProperties(req, res, next) {
 }
 
 async function supplierExists(req, res, next) {
-  const supplier = suppliersService.read(req.params.supplierId);
+  const supplier = await suppliersService.read(req.params.supplierId);
 
   if (supplier) {
     res.locals.supplier = supplier;
@@ -43,7 +43,7 @@ async function supplierExists(req, res, next) {
 }
 
 async function create(req, res, next) {
-  const data = suppliersService.create(req.body.data);
+  const data = await suppliersService.create(req.body.data);
   res.status(201).json({ data });
 }
 
@@ -53,7 +53,7 @@ async function update(req, res, next) {
     supplier_id: res.locals.supplier.supplier_id,
   };
 
-  const data = suppliersService.update(updatedSupplier);
+  const data = await suppliersService.update(updatedSupplier);
 
   res.json({ data });
 }
