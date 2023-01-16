@@ -1,4 +1,5 @@
 const productsService = require("./products.service");
+const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 //validation middleware
 async function productExists(req, res, next) {
@@ -23,6 +24,6 @@ async function list(req, res, next) {
 }
 
 module.exports = {
-  read: [productExists, read],
-  list: [list],
+  read: [asyncErrorBoundary(productExists), read],
+  list: [asyncErrorBoundary(list)],
 };
