@@ -1,5 +1,12 @@
 const restaurantsService = require("./restaurants.service.js");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
+const hasProperties = require("../errors/hasProperties");
+
+const hasRequiredProperties = hasProperties(
+  "restaurant_name",
+  "cuisine",
+  "address"
+);
 
 async function restaurantExists(req, res, next) {
   const { restaurantId } = req.params;
@@ -19,8 +26,10 @@ async function list(req, res, next) {
 }
 
 async function create(req, res, next) {
-  // Your solution here
-  res.json({ data: {} });
+  restaurantsService
+    .create(req.data.body)
+    .then((data) => res.Status(201).json({ data }))
+    .catch(next);
 }
 
 async function update(req, res, next) {
@@ -36,13 +45,15 @@ async function update(req, res, next) {
 }
 
 async function destroy(req, res, next) {
-  // your solution here
-  res.json({ data: {} });
+  restaurantsService
+    .delete(res.locals.restaurant.restaurant_id)
+    .then(() => res.sendStatus(204))
+    .catch(next);
 }
 
 module.exports = {
   list: asyncErrorBoundary(list),
-  create: asyncErrorBoundary(create),
+  create: [hasRequiredProperties, asyncErrorBoundary(create)],
   update: [asyncErrorBoundary(restaurantExists), asyncErrorBoundary(update)],
   delete: [asyncErrorBoundary(restaurantExists), asyncErrorBoundary(destroy)],
 };
