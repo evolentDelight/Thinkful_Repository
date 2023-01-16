@@ -30,8 +30,8 @@ async function read(req, res) {
 }
 
 async function readHighestRating(req, res, next) {
-  // your solution here
-  res.json({ data });
+  const highestRating = await restaurantsService.readHighestRating();
+  res.json({ data: { max_rating: highestRating[0].max } });
 }
 
 async function restaurantExists(req, res, next) {
