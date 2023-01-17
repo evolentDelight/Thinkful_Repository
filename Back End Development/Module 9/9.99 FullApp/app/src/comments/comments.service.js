@@ -23,7 +23,8 @@ function read(commentId) {
       "u.user_email as commenter_email",
       "p.post_body as commented_post"
     )
-    .where({ comment_id: commentId });
+    .where({ comment_id: commentId })
+    .first();
 }
 
 module.exports = {
