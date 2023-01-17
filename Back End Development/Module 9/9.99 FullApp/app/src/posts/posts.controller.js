@@ -18,8 +18,12 @@ async function create(req, res) {
 }
 
 async function update(req, res) {
-  // your solution here
-  res.json({ data: "" });
+  const updatedPost = {
+    ...req.body.data,
+    post_id: res.locals.post.post_id,
+  };
+  const data = await service.update(updatedPost);
+  res.json({ data });
 }
 
 async function destroy(req, res) {

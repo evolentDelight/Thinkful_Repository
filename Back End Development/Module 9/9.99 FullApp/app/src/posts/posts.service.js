@@ -1,7 +1,7 @@
 const knex = require("../db/connection");
 
 function create(post) {
-  return knex("posts as p")
+  return knex("posts")
     .insert(post)
     .returning("*")
     .then((createdRecords) => createdRecords[0]);
@@ -12,7 +12,11 @@ function read(postId) {
 }
 
 function update(updatedPost) {
-  //your solution here
+  return knex("posts")
+    .select("*")
+    .where({ post_id: updatedPost.post_id })
+    .update(updatedPost, "*")
+    .then((updatedRecords) => updatedRecords[0]);
 }
 
 function destroy(postId) {
