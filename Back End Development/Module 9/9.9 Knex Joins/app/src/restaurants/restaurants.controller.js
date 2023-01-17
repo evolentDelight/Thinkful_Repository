@@ -42,12 +42,8 @@ async function count(req, res, next) {
 }
 
 async function create(req, res, next) {
-  const newRestaurant = ({
-    restaurant_name,
-    address,
-    cuisine,
-    rating,
-  } = req.body.data);
+  const newRestaurant = ({ restaurant_name, address, cuisine, rating } =
+    req.body.data);
   const createdRestaurant = await service.create(newRestaurant);
   res.status(201).json({ data: createdRestaurant });
 }
