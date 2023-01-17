@@ -23,8 +23,17 @@ function hasValidFields(req, res, next) {
 }
 
 async function listAverageRatingByOwner(req, res, next) {
-  // your solution here
-  res.json({ data: {} });
+  const response = await service.listAverageRatingByOwner();
+
+  var data = [];
+  for (let i = 0; i < response.length; i++) {
+    data[i] = {
+      avg: Number(response[i].avg),
+      owner_name: response[i].owner_name,
+    };
+  }
+
+  res.json({ data });
 }
 
 async function averageRating(req, res, next) {
