@@ -13,8 +13,8 @@ async function postExists(req, res, next) {
 }
 
 async function create(req, res) {
-  // your solution here
-  res.json({ data: "" });
+  const data = await service.create(req.body.data);
+  res.status(201).json({ data });
 }
 
 async function update(req, res) {
